@@ -41,7 +41,6 @@ from core.shamir import (
     split,
     write_share_files,
 )
-
 from tests.conftest import make_share_with_payload
 
 

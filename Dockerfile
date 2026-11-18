@@ -42,5 +42,7 @@ FROM runtime AS test
 USER root
 RUN pip install --no-cache-dir pytest
 COPY tests ./tests
+# The runtime stage's ENTRYPOINT is the sss CLI; clear it so CMD runs pytest.
+ENTRYPOINT []
 USER sss
 CMD ["pytest", "-q"]

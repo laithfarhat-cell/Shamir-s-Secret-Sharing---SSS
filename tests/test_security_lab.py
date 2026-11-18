@@ -16,8 +16,10 @@ from simulation.security_lab import (
     _analyse_candidate,
     _default_candidates,
     _normalise_candidate,
-    main as lab_main,
     run_lab,
+)
+from simulation.security_lab import (
+    main as lab_main,
 )
 
 

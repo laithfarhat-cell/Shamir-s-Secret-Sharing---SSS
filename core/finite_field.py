@@ -29,7 +29,8 @@ established with the Lucas-Lehmer test (:func:`lucas_lehmer`), which is a
 from __future__ import annotations
 
 import secrets
-from dataclasses import dataclass, field as dataclass_field
+from dataclasses import dataclass
+from dataclasses import field as dataclass_field
 from typing import List, Optional, Sequence, Tuple, Union
 
 from core.errors import FieldError
