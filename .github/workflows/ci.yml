@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint-and-test:
+    name: lint + test (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install project with dev extras
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Test with coverage
+        run: pytest -q --cov=core --cov=cli --cov=simulation --cov-report=term-missing
+
+      - name: CLI smoke test
+        run: |
+          sss --version
+          sss split --secret "ci smoke test" -k 2 -n 3 --out-dir ./ci-shares --quiet
+          test "$(sss --quiet combine --shares ci-shares/share-01-of-03.txt ci-shares/share-02-of-03.txt)" = "ci smoke test"
+          sss verify --shares ci-shares/*.json --quiet
+          sss lab -k 3 -n 5 --quiet
+
+  docker:
+    name: docker build + test stage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build test image
+        run: docker build --target test -t sss-test .
+
+      - name: Run test-suite in container
+        run: docker run --rm sss-test
+
+      - name: Build runtime image
+        run: docker build -t sss .
+
+      - name: Container smoke test
+        run: docker run --rm sss --version

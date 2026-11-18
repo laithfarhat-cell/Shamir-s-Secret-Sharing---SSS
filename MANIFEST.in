@@ -1,0 +1,9 @@
+include README.md
+include THEORY.md
+include LICENSE
+include requirements.txt
+include requirements-dev.txt
+include Dockerfile
+include pyproject.toml
+recursive-include tests *.py
+recursive-include .github *.yml
