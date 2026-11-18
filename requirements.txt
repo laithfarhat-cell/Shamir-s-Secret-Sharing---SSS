@@ -1,0 +1,5 @@
+# Full runtime feature set: CLI rendering (rich) + hybrid vault mode (cryptography).
+# Vault mode is optional at runtime: core.shamir works without cryptography,
+# and `sss vault-*` prints an actionable install hint if it is missing.
+rich>=13.7
+cryptography>=42.0

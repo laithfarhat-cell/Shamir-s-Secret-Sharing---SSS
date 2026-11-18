@@ -1,0 +1,37 @@
+# Python bytecode / build artifacts
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.eggs/
+*.so
+
+# Virtual environments & tooling caches
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# Editors / OS noise
+.idea/
+.vscode/
+.DS_Store
+
+# Sensitive material produced by this tool — never commit these
+shares/
+*/shares/
+*.vault
+.sss/
+secrets/
+secret*.bin
+*.key
+*.pem
+.env
+.env.*
