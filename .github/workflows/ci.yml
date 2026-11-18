@@ -54,31 +54,10 @@ jobs:
         run: docker build --target test -t sss-test .
 
       - name: Run test-suite in container
-        run: |
-          set +e
-          docker run --rm sss-test > pytest-container.log 2>&1
-          status=$?
-          cat pytest-container.log
-          if [ "$status" -ne 0 ]; then
-            echo "::error::container pytest exited with status $status"
-            tail -n 15 pytest-container.log | sed 's/^/::error::/'
-          fi
-          exit "$status"
+        run: docker run --rm sss-test
 
       - name: Build runtime image
         run: docker build -t sss .
 
       - name: Container smoke test
-        run: |
-          set +e
-          out=$(docker run --rm sss --version 2>&1)
-          status=$?
-          echo "$out"
-          if [ "$status" -ne 0 ]; then
-            echo "$out" | sed 's/^/::error::/'
-            echo "::error::sss --version exited with status $status"
-            diag=$(docker run --rm --entrypoint sh sss -c 'echo "PATH=$PATH"; command -v sss || echo "sss not on PATH"; ls -l /usr/local/bin | head -20; python -c "import main, core; print(main.__file__, core.__version__)"' 2>&1)
-            echo "$diag"
-            echo "$diag" | sed 's/^/::error::/'
-          fi
-          exit "$status"
+        run: docker run --rm sss --version

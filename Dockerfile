@@ -46,3 +46,10 @@ COPY tests ./tests
 ENTRYPOINT []
 USER sss
 CMD ["pytest", "-q"]
+
+# ---------------------------------------------------------------------------
+# Final stage: identical to the runtime image, but declared last so that a
+# plain `docker build -t sss .` produces the CLI image (not the test image).
+# Use `docker build --target test .` to run the test-suite in a container.
+# ---------------------------------------------------------------------------
+FROM runtime AS final
