@@ -69,4 +69,16 @@ jobs:
         run: docker build -t sss .
 
       - name: Container smoke test
-        run: docker run --rm sss --version
+        run: |
+          set +e
+          out=$(docker run --rm sss --version 2>&1)
+          status=$?
+          echo "$out"
+          if [ "$status" -ne 0 ]; then
+            echo "$out" | sed 's/^/::error::/'
+            echo "::error::sss --version exited with status $status"
+            diag=$(docker run --rm --entrypoint sh sss -c 'echo "PATH=$PATH"; command -v sss || echo "sss not on PATH"; ls -l /usr/local/bin | head -20; python -c "import main, core; print(main.__file__, core.__version__)"' 2>&1)
+            echo "$diag"
+            echo "$diag" | sed 's/^/::error::/'
+          fi
+          exit "$status"
