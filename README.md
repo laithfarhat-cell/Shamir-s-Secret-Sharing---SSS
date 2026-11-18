@@ -110,6 +110,8 @@ $ sss split --secret "correct horse battery staple" -k 3 -n 5 \
 ╰──────────────────────────────────────────────────────────────────────────────╯
 ```
 
+*(Illustrative output — every split uses fresh randomness, so your shares differ.)*
+
 Reconstruct from any three shares — files, armoured strings, or a mix:
 
 ```console
