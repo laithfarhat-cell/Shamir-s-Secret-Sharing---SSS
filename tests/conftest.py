@@ -2,8 +2,16 @@
 
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
+
+# Whenever stdout is not a TTY (CI, Docker, `pytest | tee`) rich falls back to a
+# fixed 80-column rendering and hard-wraps long messages. That makes assertions
+# on message text depend on terminal geometry -- and therefore on the length of
+# pytest's temporary directory path. Pin the width so the suite always renders
+# the same layout, whatever host, user or container it runs in.
+os.environ["COLUMNS"] = "160"
 
 import pytest
 
