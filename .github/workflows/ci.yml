@@ -54,7 +54,16 @@ jobs:
         run: docker build --target test -t sss-test .
 
       - name: Run test-suite in container
-        run: docker run --rm sss-test
+        run: |
+          set +e
+          docker run --rm sss-test > pytest-container.log 2>&1
+          status=$?
+          cat pytest-container.log
+          if [ "$status" -ne 0 ]; then
+            echo "::error::container pytest exited with status $status"
+            tail -n 15 pytest-container.log | sed 's/^/::error::/'
+          fi
+          exit "$status"
 
       - name: Build runtime image
         run: docker build -t sss .
